@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskList = document.getElementById('taskContainer');
 
     async function fetchTasks() {
-        const response = await fetch('http://localhost:2011/api/tasks');
+        const response = await fetch('https://task-manager-4n7k.onrender.com');
         return await response.json();
     }
 
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (taskText === "") return;
 
-        await fetch('http://localhost:2011/api/tasks', {
+        await fetch('https://task-manager-4n7k.onrender.com', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text: taskText, description: taskDesc })
@@ -61,14 +61,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function deleteTask(id) {
-        await fetch(`http://localhost:2011/api/tasks/${id}`, { method: 'DELETE' });
+        await fetch(`https://task-manager-4n7k.onrender.com/${id}`, { method: 'DELETE' });
         await renderTasks();
     }
 
     async function editTaskPrompt(id) {
         const newTitle = prompt('Edit Task Title:');
         if (newTitle) {
-            await fetch(`http://localhost:2011/api/tasks/${id}`, {
+            await fetch(`https://task-manager-4n7k.onrender.com${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text: newTitle.trim() })
@@ -78,8 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function toggleTaskCompletion(id) {
-        const task = await (await fetch(`http://localhost:2011/api/tasks/${id}`)).json();
-        await fetch(`http://localhost:2011/api/tasks/${id}`, {
+        const task = await (await fetch(`https://task-manager-4n7k.onrender.com${id}`)).json();
+        await fetch(`https://task-manager-4n7k.onrender.com${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ completed: !task.completed })
