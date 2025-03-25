@@ -3,9 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskInput = document.getElementById('taskInput');
     const taskList = document.getElementById('taskContainer');
 
-    const API_BASE_URL = window.location.hostname === "localhost"
-        ? "http://localhost:2011/api/tasks"
-        : "https://task-manager-4n7k.onrender.com/api/tasks";
+    const API_BASE_URL = "https://task-manager-4n7k.onrender.com/api/tasks";
 
     async function fetchTasks() {
         const response = await fetch(API_BASE_URL);

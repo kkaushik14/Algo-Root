@@ -13,53 +13,58 @@ if (!fs.existsSync(TASKS_FILE)) {
   fs.writeFileSync(TASKS_FILE, '[]');
 }
 
-app.use(cors());
+app.use(cors({
+    origin: "https://task-manager-kumar-kaushiks-projects.vercel.app",
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: "Content-Type"
+}));
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/tasks', (req, res) => {
-  res.json(readTasks());
+    res.json(readTasks());
 });
 
 app.post('/api/tasks', (req, res) => {
-  const tasks = readTasks();
-  const newTask = {
-    id: uuidv4(),
-    text: req.body.text,
-    description: req.body.description || '',
-    completed: false,
-  };
-  tasks.push(newTask);
-  writeTasks(tasks);
-  res.status(201).json(newTask);
+    const tasks = readTasks();
+    const newTask = {
+        id: uuidv4(),
+        text: req.body.text,
+        description: req.body.description || '',
+        completed: false,
+    };
+    tasks.push(newTask);
+    writeTasks(tasks);
+    res.status(201).json(newTask);
 });
 
 app.put('/api/tasks/:id', (req, res) => {
-  const tasks = readTasks();
-  const index = tasks.findIndex(t => t.id === req.params.id);
-  if (index === -1) return res.status(404).send('Task not found');
+    const tasks = readTasks();
+    const index = tasks.findIndex(t => t.id === req.params.id);
+    if (index === -1) return res.status(404).send('Task not found');
 
-  tasks[index] = { ...tasks[index], ...req.body };
-  writeTasks(tasks);
-  res.json(tasks[index]);
+    tasks[index] = { ...tasks[index], ...req.body };
+    writeTasks(tasks);
+    res.json(tasks[index]);
 });
 
 app.delete('/api/tasks/:id', (req, res) => {
-  let tasks = readTasks();
-  const initialLength = tasks.length;
-  tasks = tasks.filter(t => t.id !== req.params.id);
-  if (tasks.length === initialLength) return res.status(404).send('Task not found');
+    let tasks = readTasks();
+    const initialLength = tasks.length;
+    tasks = tasks.filter(t => t.id !== req.params.id);
+    if (tasks.length === initialLength) return res.status(404).send('Task not found');
 
-  writeTasks(tasks);
-  res.status(204).send();
+    writeTasks(tasks);
+    res.status(204).send();
 });
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
 
 const readTasks = () => JSON.parse(fs.readFileSync(TASKS_FILE));
