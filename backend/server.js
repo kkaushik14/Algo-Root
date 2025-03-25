@@ -13,11 +13,13 @@ if (!fs.existsSync(TASKS_FILE)) {
   fs.writeFileSync(TASKS_FILE, '[]');
 }
 
-app.use(cors({
-    origin: "https://task-manager-kumar-kaushiks-projects.vercel.app",
-    methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: "Content-Type"
-}));
+const corsOptions = {
+  origin: 'https://task-manager-tan-zeta.vercel.app',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
