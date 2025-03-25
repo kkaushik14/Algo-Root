@@ -6,8 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_BASE_URL = "https://task-manager-4n7k.onrender.com/api/tasks";
 
     async function fetchTasks() {
-        const response = await fetch(API_BASE_URL);
-        return await response.json();
+        try {
+            const response = await fetch(API_BASE_URL);
+            if (!response.ok) throw new Error("Failed to fetch tasks");
+            return await response.json();
+        } catch (error) {
+            console.error("Error fetching tasks:", error);
+            return [];
+        }
     }
 
     async function renderTasks() {
@@ -49,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const taskText = taskInput.value.trim();
         const taskDesc = document.getElementById('taskDescription').value.trim();
 
-        if (taskText === "") return;
+        if (!taskText) return;
 
         await fetch(API_BASE_URL, {
             method: 'POST',
@@ -60,58 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
         taskInput.value = "";
         document.getElementById('taskDescription').value = "";
         await renderTasks();
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newTask),
-          })
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error('Network response was not ok');
-              }
-              return response.json();
-            })
-            .then((data) => {
-              console.log('Success:', data);
-            })
-            .catch((error) => {
-              console.error('Error:', error);
-            });
-    }
-
-    async function deleteTask(id) {
-        await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE' });
-        await renderTasks();
-    }
-
-    async function editTaskPrompt(id) {
-        const newTitle = prompt('Edit Task Title:');
-        if (newTitle) {
-            await fetch(`${API_BASE_URL}/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: newTitle.trim() })
-            });
-            await renderTasks();
-        }
-    }
-
-    async function toggleTaskCompletion(id) {
-        const task = await (await fetch(`${API_BASE_URL}/${id}`)).json();
-        await fetch(`${API_BASE_URL}/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ completed: !task.completed })
-        });
-        await renderTasks();
     }
 
     taskForm.addEventListener('submit', addTask);
-    window.deleteTask = deleteTask;
-    window.editTaskPrompt = editTaskPrompt;
-    window.toggleTaskCompletion = toggleTaskCompletion;
     renderTasks();
 });
