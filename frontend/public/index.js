@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskInput = document.getElementById('taskInput');
     const taskList = document.getElementById('taskContainer');
 
-    const API_BASE_URL = "https://api.render.com/deploy/srv-cvhf5ud2ng1s73bfc5tg?key=tkb2ZUl7YaQ";
+    const API_BASE_URL = "https://task-manager-zax9.onrender.com";
 
     async function fetchTasks() {
         try {
