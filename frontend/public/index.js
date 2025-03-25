@@ -3,8 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskInput = document.getElementById('taskInput');
     const taskList = document.getElementById('taskContainer');
 
+    const API_BASE_URL = window.location.hostname === "localhost"
+        ? "http://localhost:2011/api/tasks"
+        : "https://task-manager-4n7k.onrender.com/api/tasks";
+
     async function fetchTasks() {
-        const response = await fetch('https://task-manager-4n7k.onrender.com');
+        const response = await fetch(API_BASE_URL);
         return await response.json();
     }
 
@@ -14,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tasks.forEach(task => {
             const taskElement = document.createElement('div');
             taskElement.className = `p-4 border ${task.completed ? 'bg-green-50' : 'bg-white'} rounded-lg shadow-sm`;
-            
+
             taskElement.innerHTML = `
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
@@ -49,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (taskText === "") return;
 
-        await fetch('https://task-manager-4n7k.onrender.com', {
+        await fetch(API_BASE_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text: taskText, description: taskDesc })
@@ -61,14 +65,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function deleteTask(id) {
-        await fetch(`https://task-manager-4n7k.onrender.com/${id}`, { method: 'DELETE' });
+        await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE' });
         await renderTasks();
     }
 
     async function editTaskPrompt(id) {
         const newTitle = prompt('Edit Task Title:');
         if (newTitle) {
-            await fetch(`https://task-manager-4n7k.onrender.com${id}`, {
+            await fetch(`${API_BASE_URL}/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text: newTitle.trim() })
@@ -78,8 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function toggleTaskCompletion(id) {
-        const task = await (await fetch(`https://task-manager-4n7k.onrender.com${id}`)).json();
-        await fetch(`https://task-manager-4n7k.onrender.com${id}`, {
+        const task = await (await fetch(`${API_BASE_URL}/${id}`)).json();
+        await fetch(`${API_BASE_URL}/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ completed: !task.completed })

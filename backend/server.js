@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
@@ -5,7 +6,7 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
 const app = express();
-const PORT = 2011;
+const PORT = process.env.PORT || 2011;
 const TASKS_FILE = path.join(__dirname, 'tasks.json');
 
 if (!fs.existsSync(TASKS_FILE)) {
@@ -14,15 +15,10 @@ if (!fs.existsSync(TASKS_FILE)) {
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../frontend/public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
-const readTasks = () => JSON.parse(fs.readFileSync(TASKS_FILE));
-const writeTasks = (tasks) => fs.writeFileSync(TASKS_FILE, JSON.stringify(tasks, null, 2));
-
-app.get('*', (req, res) => {
-  const tasks = readTasks();
-  res.json(tasks);
-  res.sendFile(path.join(__dirname, '../frontend/public', 'index.html'));
+app.get('/api/tasks', (req, res) => {
+  res.json(readTasks());
 });
 
 app.post('/api/tasks', (req, res) => {
@@ -58,6 +54,13 @@ app.delete('/api/tasks/:id', (req, res) => {
   res.status(204).send();
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+const readTasks = () => JSON.parse(fs.readFileSync(TASKS_FILE));
+const writeTasks = (tasks) => fs.writeFileSync(TASKS_FILE, JSON.stringify(tasks, null, 2));
