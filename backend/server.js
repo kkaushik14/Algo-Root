@@ -13,7 +13,13 @@ if (!fs.existsSync(TASKS_FILE)) {
     fs.writeFileSync(TASKS_FILE, '[]');
 }
 
-const allowedOrigins = ['https://task-manager-tan-zeta.vercel.app'];
+app.use(cors({
+  origin: "https://task-manager-tan-zeta.vercel.app",
+  methods: "GET, POST, PUT, DELETE",
+  allowedHeaders: "Content-Type",
+  credentials: true
+}));
+
 
 app.use(cors({
     origin: function (origin, callback) {
