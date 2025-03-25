@@ -60,6 +60,26 @@ document.addEventListener('DOMContentLoaded', () => {
         taskInput.value = "";
         document.getElementById('taskDescription').value = "";
         await renderTasks();
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newTask),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log('Success:', data);
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
     }
 
     async function deleteTask(id) {

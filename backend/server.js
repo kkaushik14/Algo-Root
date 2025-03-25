@@ -12,6 +12,7 @@ const TASKS_FILE = path.join(__dirname, 'tasks.json');
 if (!fs.existsSync(TASKS_FILE)) {
   fs.writeFileSync(TASKS_FILE, '[]');
 }
+const allowedOrigins = ['https://task-manager-tan-zeta.vercel.app'];
 
 const corsOptions = {
   origin: 'https://task-manager-tan-zeta.vercel.app',
@@ -19,7 +20,16 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 204,
 };
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+}));
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
