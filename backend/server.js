@@ -27,7 +27,7 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: "GET,POST,PUT,DELETE",
+  methods: "GET,POST,PUT,PATCH,DELETE",
   allowedHeaders: "Content-Type",
   credentials: true
 }));
@@ -64,6 +64,20 @@ app.put('/api/tasks/:id', (req, res) => {
     const tasks = JSON.parse(fs.readFileSync(TASKS_FILE));
     const index = tasks.findIndex(t => t.id === req.params.id);
     if (index === -1) return res.status(404).send('Task not found');
+    tasks[index] = { ...tasks[index], ...req.body };
+    fs.writeFileSync(TASKS_FILE, JSON.stringify(tasks, null, 2));
+    res.json(tasks[index]);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update task' });
+  }
+});
+
+app.patch('/api/tasks/:id', (req, res) => {
+  try {
+    const tasks = JSON.parse(fs.readFileSync(TASKS_FILE));
+    const index = tasks.findIndex(t => t.id === req.params.id);
+    if (index === -1) return res.status(404).send('Task not found');
+
     tasks[index] = { ...tasks[index], ...req.body };
     fs.writeFileSync(TASKS_FILE, JSON.stringify(tasks, null, 2));
     res.json(tasks[index]);

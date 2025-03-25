@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskForm = document.getElementById('taskForm');
     const taskInput = document.getElementById('taskInput');
     const taskList = document.getElementById('taskContainer');
-
     const API_BASE_URL = "https://task-manager-zax9.onrender.com";
 
     async function fetchTasks() {
@@ -22,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
         tasks.forEach(task => {
             const taskElement = document.createElement('div');
             taskElement.className = `p-4 border ${task.completed ? 'bg-green-50' : 'bg-white'} rounded-lg shadow-sm`;
-
             taskElement.innerHTML = `
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
@@ -35,12 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     <div class="flex space-x-2">
-                        <button onclick="editTaskPrompt('${task.id}')" 
-                            class="text-sky-600 hover:text-sky-800">
+                        <button onclick="editTaskPrompt('${task.id}')" class="text-sky-600 hover:text-sky-800">
                             <i class="bi bi-pencil"></i>
                         </button>
-                        <button onclick="deleteTask('${task.id}')" 
-                            class="text-red-600 hover:text-red-800">
+                        <button onclick="deleteTask('${task.id}')" class="text-red-600 hover:text-red-800">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
@@ -65,6 +61,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
         taskInput.value = "";
         document.getElementById('taskDescription').value = "";
+        await renderTasks();
+    }
+
+    async function deleteTask(taskId) {
+        await fetch(`${API_BASE_URL}/${taskId}`, { method: 'DELETE' });
+        await renderTasks();
+    }
+
+    async function toggleTaskCompletion(taskId) {
+        const tasks = await fetchTasks();
+        const task = tasks.find(t => t.id === taskId);
+        if (!task) return;
+        
+        await fetch(`${API_BASE_URL}/${taskId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ completed: !task.completed })
+        });
+        await renderTasks();
+    }
+
+    function editTaskPrompt(taskId) {
+        const newText = prompt("Enter updated task text:");
+        if (newText !== null && newText.trim() !== "") {
+            editTask(taskId, newText.trim());
+        }
+    }
+
+    async function editTask(taskId, newText) {
+        await fetch(`${API_BASE_URL}/${taskId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: newText })
+        });
         await renderTasks();
     }
 
