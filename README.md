@@ -131,7 +131,6 @@ curl -X DELETE https://task-manager-4n7k.onrender.com/api/tasks/5678
 
 ## 📌 **Screenshots (UI Showcase)**
 📌 Add UI screenshots here showing the **task list, adding a task, editing a task, and deleting a task.**  
-You can upload them to GitHub and reference them in Markdown like this:
 ```md
 <!--img-->
 ```
