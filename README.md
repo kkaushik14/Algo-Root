@@ -132,7 +132,16 @@ curl -X DELETE https://task-manager-4n7k.onrender.com/api/tasks/5678
 ## 📌 **Screenshots (UI Showcase)**
 📌 Add UI screenshots here showing the **task list, adding a task, editing a task, and deleting a task.**  
 ```md
-<!--img-->
+![Task Manager UI](https://drive.google.com/uc?export=view&id=1Wxj4anDbuHzqSvSQQ7wOlZr5OrL16nRG)
+
+![Task Manager UI](https://drive.google.com/uc?export=view&id=1km8iqerGotTWlAf30cWBlR-LHOk7Rjys)
+
+![Task Manager UI](https://drive.google.com/uc?export=view&id=1I_dhMtsEioh5LcUUT-fruIyKHxhKWT-tv)
+
+![Task Manager UI](https://drive.google.com/uc?export=view&id=1km8iqerGotTWlAf30cWBlR-LHOk7Rjys)
+
+![Task Manager UI](https://drive.google.com/uc?export=view&id=1V9PUGZxyxcBwO0gd3dgIfNsW4Vw1sGzX)
+
 ```
 
 ---
